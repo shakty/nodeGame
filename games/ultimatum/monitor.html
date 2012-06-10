@@ -5,11 +5,29 @@
 <body>
   <div id="root"></div>
 
+  <script src="/ultimatum/html/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src="/ultimatum/html/js/ember-0.9.8.1.min.js" type="text/javascript"></script>
+  <script src="/ultimatum/html/js/ember-data-latest.min.js" type="text/javascript"></script>
+  <script src="/ultimatum/html/js/underscore-1.3.3.min.js" type="text/javascript"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/nodegame.js" charset="utf-8"></script>
   <script src="./Ultimatum_monitor.js" charset="utf-8"></script>
-  
+
   <link rel='stylesheet' href='/stylesheets/monitor.css'></link>
+
+<script type="text/x-handlebars" data-template-name="PaymentWidget">
+  <fieldset id="payment">
+  <legend>Payment</legend>
+  <ul>
+    {{#each App.players}}
+      <li>
+        <span>Player ID: {{id}}</span><br/>
+        <span>Balance: {{balance}} CHF</span>
+      </li>
+    {{/each}}
+  </ul>
+  </fieldset>
+</script>
 
   <script>
       window.onload = function(){
