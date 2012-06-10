@@ -29,32 +29,39 @@ function Ultimatum_monitor () {
 		paymentView.appendTo('#root');
 	};
 
-	var players_ids = []; // List of player ids to check if a player object is new.
+	var players_objects = {};
 
 	node.on('UPDATED_PLIST', function(){
 		var playerlist = node.game.pl.db;
 
-		// For each of those objects, is the user already in the system (Ember.store)?
+		// For each of those objects, is the user already in the system? - getting an initial credit
 		if(playerlist.length >= 0){
-
-			App.players.set('content', playerlist);
-
 			_.each(playerlist, function(player){
-				if(!_.include(players_ids, player.id)){
-					players_ids.push(player.id);
+
+				if(typeof players_objects[player.id] === 'undefined'){
 
 					// Add the initial amount to the players balance.
-					player.balance = 10;
+					players_objects[player.id] = {balance: 10};
+
+				} else {
+
+					// increase the value by n-amount or run a custom function to change the balance
+					var update = function(){
+
+						// change the balance
+						players_objects[player.id].balance += 0.5;
+					};
+
+					update();
 				}
 			});
+
+			var playerlist_for_view = _.map(_.keys(players_objects), function(key){
+				return {id: key, balance: players_objects[key].balance};
+			});
+
+			App.players.set('content', playerlist_for_view);
 		}
-
-		// How to get the latest move? The player which caused the UPDATED_PLIST.
-		// Which object got updated?
-		// Listening to the socket.io commands? + add some timeout to make sure the playerlist has been updated?
-
-		console.log('updated'); // DEBUG
-		console.log(playerlist); // DEBUG
 	});
 	
 	function printGameState () {
